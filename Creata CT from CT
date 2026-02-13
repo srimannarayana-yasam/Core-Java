@@ -1,0 +1,46 @@
+package com.nit.hk.multithreading;
+
+/**
+ * Q16) Can we create a custom thread from other custom thread?
+ * 		- yes, it is possible
+ * 
+ * Q17) What is the procedure?
+ *      - create one thread class object and call start() method 
+ *        in another thread class run() method
+ *        
+ *      - create the first thread class object and call start() method
+ *        in main method
+ *        
+ *      - main thread starts thread1
+ *      - thread1 starts thread2
+ *         
+ */
+public class Test19_createCT_from_CT {
+	public static void main(String[] args) {
+		System.out.println("main start");
+			MyThread11 mt1 = new MyThread11();
+			mt1.start();
+		System.out.println("main end");
+	}
+}
+
+class MyThread11 extends Thread {
+	@Override
+	public void run() {
+		System.out.println("MyThread11.run() start");
+		
+		MyThread12 mt2 = new MyThread12();
+		mt2.start();
+		
+		System.out.println("MyThread11.run() end");	
+	}
+}
+
+class MyThread12 extends Thread {
+	@Override
+	public void run() {
+		System.out.println("MyThread12.run() start");
+		
+		System.out.println("MyThread12.run() end");
+	}
+}
