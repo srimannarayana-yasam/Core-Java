@@ -1,3 +1,93 @@
+🧵 Java Threads – Quick Revision Notes
+🔹 1️⃣ JVM & Main Thread
+
+JVM automatically creates main thread
+
+Execution starts from:
+
+public static void main(String[] args)
+
+
+main() runs inside main thread
+
+Program cannot run without main thread
+
+👉 Point to Remember: JVM always creates main thread first.
+
+🔹 2️⃣ Creating Custom Thread
+✅ Two Ways:  ✔ Method 1: Extending Thread
+
+class MyThread extends Thread {
+    public void run() {
+        // task
+    }
+}
+
+✔ Method 2: Implementing Runnable (Recommended)
+class MyRunnable implements Runnable {
+    public void run() {
+        // task
+    }
+}
+
+Thread t = new Thread(new MyRunnable());
+t.start();
+
+
+👉 Recommended in interviews: Runnable
+
+🔹 3️⃣ start() vs run()
+
+start()											run()
+
+Creates new thread							Normal method call
+Calls run() internally						Does NOT create thread
+Runs in separate call stack					Runs in main thread
+
+👉 Always call start() to create thread.
+
+🔹 4️⃣ Static or Non-Static?
+
+start() → Non-static
+
+run() → Non-static
+
+👉 Threads work on objects, so methods are instance methods.
+
+🔹 5️⃣ Thread Flow
+JVM starts
+   ↓
+Main thread created
+   ↓
+main() executes
+   ↓
+Custom thread created using start()
+
+🔹 6️⃣ Important Methods
+
+start()
+
+run()
+
+sleep()
+
+join()
+
+yield()
+
+setName()
+
+getName()
+
+🔹 7️⃣ Interview One-Liners
+
+✔ JVM creates main thread automatically.
+✔ Threads are created using start().
+✔ run() contains task logic.
+✔ start() creates new thread.
+✔ Static, final, and private are methods cannot be overridden, as well as constructors too.
+✔ Thread methods are non-static.
+
 /**
  * Q2) What is a multi thread model application ?
  *    An application that uses more than one thread to execute its tasks 
