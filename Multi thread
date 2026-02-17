@@ -4,7 +4,7 @@
  *    is called multi thread model application
  *    
  *    A new thread is available in JVM only after start() method is called
- *    As long as we don't call start method this application is just STM application
+ *    As long as we don't call start method this application is just STM ( Single Thread Model ) application
  *     
  * Below program explains creating MTM application
  *  
