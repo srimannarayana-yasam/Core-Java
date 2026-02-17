@@ -1,4 +1,49 @@
+*** Can We Run Without Main Thread?
 
+❌ No.
+
+Because:
+
+JVM needs an entry point.
+
+Execution must start from main() method.
+
+JVM creates main thread automatically.
+
+But you can:
+
+Start custom threads
+
+Let main thread finish early
+
+Keep program alive using other threads
+
+Example : 
+
+class MyThread extends Thread {
+    public void run() {
+        while(true) {
+            System.out.println("Running...");
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        new MyThread().start();
+    }
+}
+
+Here:
+
+Main thread finishes quickly
+
+Custom thread keeps running
+
+🔥 Interview Answer
+
+No, we cannot create a Java program without a main thread because JVM always creates one. However, 
+we can create custom threads using Thread class or Runnable interface.
 
 /**
  * Q12) Can we override start() method?
