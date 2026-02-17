@@ -182,8 +182,8 @@ class MyThread13 extends Thread {
 		System.out.println(name + " run start");
 		
 		MyThread13 mt2 = new MyThread13();
-		//mt2.start();
-		mt2.run();
+		mt2.start();
+		//mt2.run();
 		System.out.println(name + " run end"); 
 	}	 
 }
