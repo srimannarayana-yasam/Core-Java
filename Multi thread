@@ -1,0 +1,333 @@
+/**
+ * Q2) What is a multi thread model application ?
+ *    An application that uses more than one thread to execute its tasks 
+ *    is called multi thread model application
+ *    
+ *    A new thread is available in JVM only after start() method is called
+ *    As long as we don't call start method this application is just STM application
+ *     
+ * Below program explains creating MTM application
+ *  
+ */
+class MyThread3 extends Thread {
+	@Override
+	public void run() {
+		System.out.println("\nrun start");
+		
+		System.out.println("run end");
+	}
+}
+
+public class Test08_MultiThreadModelApplication {
+	public static void main(String[] args) {
+		System.out.println("main start");
+		
+		MyThread3 mt1 = new MyThread3();
+		mt1.start();
+		
+		System.out.println("main end");
+	}
+}
+
+=====================================================================================================================================================================================================
+/**
+ * Q3) Is it possible to call run() method directly? 
+ *     - yes, it is possible
+ *     - but custom thread is not created
+ *     - run() method logic is executed in main thread
+ *       sequentially with main method logic
+ *      
+ */
+class MyThread4 extends Thread {
+	@Override
+	public void run() {
+		System.out.println("run start");
+		for(int i=1; i<=20; i++) {
+			System.out.println("run: "+ i);
+		}
+		System.out.println("run end");
+	}
+}
+
+public class Test09_runCall {
+	public static void main(String[] args) {
+		System.out.println("main start");
+		
+		MyThread4 mt1 = new MyThread4();
+		mt1.run(); //executed immediately by pausing main method execution
+					//sequential flow of execution
+
+		for(int i=1; i<=20; i++) {
+			System.out.println("main: "+ i);
+		}
+		
+		System.out.println("main end");
+	}
+}
+
+=================================================================================================================================================================================================
+
+/**
+ * Q4) can we call both run() and start() methods? 
+ *     - yes, it is possible
+ *     - then run() method is executed 2 times 
+ *     		1. first in main thread 
+ *     		2. second in custom thread 
+ *     - in custom thread run() method logic is executed only after 
+ *       in run() method in main thread is completed
+ *       
+ *     - if we call first run() and then start() we get 
+ *       both run() methods are executed sequentially 	 
+ *      
+ */
+class MyThread5 extends Thread {
+	@Override
+	public void run() {
+		System.out.println("run start");
+		for(int i=1; i<=20; i++) {
+			System.out.println("run: "+ i);
+		}
+		System.out.println("run end");
+	}
+}
+
+public class Test10_runStartCall {
+	public static void main(String[] args) {
+		System.out.println("main start");
+		
+		MyThread5 mt1 = new MyThread5();
+		
+		mt1.run(); 			//run() is executed in 'main' thread sequentially
+		mt1.start();		//run() is executed in 'custom' thread concurrently
+
+		for(int i=1; i<=20; i++) {
+			System.out.println("main: "+ i);
+		}
+		
+		System.out.println("main end");
+	}
+}
+=================================================================================================================================================================================================
+/**
+ * Q5) can we call first start() and then run() method? 
+ *     - yes, it is possible
+ *     - in this case run() method is executed 2 times 
+ *       concurrently, because by the time run() method
+ *       executed in main thread, the run() method is already
+ *       ready to execute in custom thread
+ *      
+ */
+class MyThread6 extends Thread {
+	@Override
+	public void run() {
+		String name = Thread.currentThread().getName();
+		System.out.println(name + " run start");
+		for(int i=1; i<=20; i++) {
+			System.out.println(name + " run: "+ i);
+		}
+		System.out.println(name + " run end");
+	}
+}
+
+public class Test11_startRunCall {
+	public static void main(String[] args) {
+		System.out.println("main start");
+		
+		MyThread6 mt1 = new MyThread6();
+		
+		mt1.start();		//run() is executed in 'custom' thread concurrently with main thread run
+		mt1.run(); 			//run() is executed in 'main' thread concurrently with custom thread run 
+
+		for(int i=1; i<=20; i++) {
+			System.out.println("main: "+ i);
+		}
+		
+		System.out.println("main end");
+	}
+}
+=================================================================================================================================================================================
+/**
+ * Q6) Is it possible to call start() method more than once on the same thread object?
+ *     - No, it leads to exception IllegalTheadStateException
+ */
+class MyThread7 extends Thread {
+	@Override
+	public void run() {
+		for(int i=1; i<=20; i++) {
+			System.out.println("run: "+ i);
+		}
+	}
+}
+
+public class Test12_callingStartMultiple {
+	public static void main(String[] args) {
+		
+		MyThread7 mt1 = new MyThread7();
+		mt1.start();
+	//	mt1.start(); //RE: IllegalThreaStateException
+		
+	}
+}
+=================================================================================================================================================================================
+/**
+ * Q7) How can we create multiple custom threads ?
+ *   - We are two approaches to create multiple custom threads 
+ *   	1. Single class 	-> multiple objects -> calling start() method on each object separately
+ *   	2. Multiple classes -> multiple objects -> calling start() method on each object separately
+ *    
+ *  Below program explains 
+ *    Approach #1: single class multiple instance   
+ */
+
+class MyThread8 extends Thread {
+	@Override
+	public void run() {
+		for(int i=1; i<=20; i++) {
+			System.out.println(getName() + " run: "+ i);
+		}
+	}
+}
+public class Test13_MultipleCTs {
+	public static void main(String[] args) {
+		
+		System.out.println("main start");
+		
+		MyThread8 mt1 = new MyThread8();	//CT #1: Thread-0 -> executes run() of MyThread class
+		mt1.start();
+		
+		MyThread8 mt2 = new MyThread8();	//CT #2: Thread-1 -> executes run() of MyThread class
+		mt2.start();
+		
+		System.out.println("main end");
+	}
+}
+
+/**
+ * The problem in this approach is the logic is executed in all custom threads
+ * with the same inputs
+ * 
+ * 	The problem is same logic with same inputs
+ *     If we want to execute same logic with diff inputs, 
+ *     we must pass the inputs as argument to run() method
+ */
+=================================================================================================================================================================================
+/**
+ * The problem in approach #1 
+ * 	is same logic with same inputs
+ *     If we want to execute same logic with different inputs, 
+ *     we must pass the inputs as argument to run() method
+ *     
+ * Q8) is it possible to pass arguments to the run method ?
+ *     - No, Because it is a non parameterized method 
+ *  
+ * Q9) Is it possible to add parameters to run method ?
+ * 		- No, because it is overriding method, we can not add parameters as we like
+ *
+ * Q10) Then how can we pass arguments to run() method to execute its logic with the runtime values ?
+ *     1. Use instance variable, 
+ *     2. initialize it with runtime value via constructor at the time of thread object creation
+ *     
+ * Below program explains running same logic in multiple custom threads concurrently 
+ * with different runtime values     
+ */ 	
+
+class MyThread9 extends Thread {
+	
+	private int x;
+	
+	public MyThread9(int x) {
+		this.x = x;
+	}
+	
+	@Override
+	public void run() {
+		for(int i=1; i<=x; i++) {
+			System.out.println(getName() + " run: "+ i);
+		}
+	}
+}
+public class Test14_MultipleCTs_DiffInputs {
+	public static void main(String[] args) {
+		
+		System.out.println("main start");
+		
+		MyThread9 mt1 = new MyThread9(10);	//CT #1: Thread-0 -> executes run() of MyThread class
+		mt1.start(); //-> mt1.run();
+		
+		MyThread9 mt2 = new MyThread9(15);	//CT #2: Thread-1 -> executes run() of MyThread class
+		mt2.start(); //-> mt2.run();
+		
+		System.out.println("main end");
+	}
+}
+
+
+/**
+ * The problem in this approach we cannot execute different logic 
+ * To execute different logic we must create multiple sub classes 
+ */
+
+=================================================================================================================================================================================
+/**
+ * Q11) The problem in approach #1
+ *        we cannot execute different logic
+ *   
+ *  To execute different logic we must create multiple sub classes
+ *  
+ * Develop multiple custom threat to execute two tasks adding and subtracting given sequence of numbers 
+ * 		Task1: Add numbers 1-20
+ * 		Tesk2: Sub numbers 1-20
+ * 
+ * Print the result in the each iteration
+ *   
+ */
+class AddThread extends Thread {
+	@Override
+	public void run() {
+		int sum = 1;
+		for(int i=2; i<=3; i++) {
+			sum = sum + i;
+			System.out.println("summation: "+ sum);
+		}
+	}
+}
+
+class SubThread extends Thread {
+	@Override
+	public void run() {
+		int sub = 1;
+		for(int i=2; i<=3; i++) {
+			sub = sub - i;
+			System.out.println("subtraction: "+ sub);
+		}
+	}
+}
+
+class MulThread extends Thread {
+	@Override
+	public void run() {
+		int mul = 1;
+		for(int i=2; i<=3; i++) {
+			mul = mul * i;
+			System.out.println("multiplication: "+ mul);
+		}
+	}
+}
+
+
+public class Test15_MultipleCTs_DiffLogics {
+	public static void main(String[] args) {
+		System.out.println("main start");
+		
+		AddThread at = new AddThread();
+		SubThread st = new SubThread();
+		MulThread mt = new MulThread();
+		
+		at.start();
+		st.start();
+		mt.start();
+		
+		System.out.println("main end");
+	}
+}
+=================================================================================================================================================================================
