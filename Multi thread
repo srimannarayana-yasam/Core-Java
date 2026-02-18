@@ -88,6 +88,43 @@ getName()
 ✔ Static, final, and private are methods cannot be overridden, as well as constructors too.
 ✔ Thread methods are non-static.
 
+Thread and Stack Relationship
+Every thread HAS its own stack, but a thread is not just a stack.
+
+What a Thread consists of:
+A thread is made up of several components:
+
+Stack — its own private call stack (local variables, method calls, return addresses)
+Program Counter (PC) — tracks which instruction to execute next
+Thread state — NEW, RUNNABLE, BLOCKED, WAITING, TERMINATED
+Priority, name, daemon flag
+
+
+What is SHARED between threads:
+
+Heap — objects, instance variables
+Method Area / Class data
+Static variables
+
+
+Visual
+JVM Memory
+│
+├── Heap (SHARED)
+│     └── objects, arrays, instance vars
+│
+├── Method Area (SHARED)
+│     └── class data, static vars
+│
+├── Stack of main thread   (PRIVATE)
+├── Stack of Thread-0      (PRIVATE)
+└── Stack of Thread-1      (PRIVATE)
+
+Key Takeaway
+
+A thread owns a stack, but it is not a stack. The stack is just one part of a thread. Each thread gets its own stack 
+which is why local variables are thread-safe by default — they are never shared.
+
 /**
  * Q2) What is a multi thread model application ?
  *    An application that uses more than one thread to execute its tasks 
